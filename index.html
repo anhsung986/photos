@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi" id="htmlRoot">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Cloud Gallery - World of Blocks</title>
+    <title data-i18n="pageTitle">Minecraft Cloud Gallery - World of Blocks</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Modern Sans-serif Font: Plus Jakarta Sans -->
@@ -51,7 +51,6 @@
             background-attachment: fixed;
         }
 
-        /* Glassmorphism Styles */
         .glass-panel {
             background: rgba(10, 25, 47, 0.75);
             backdrop-filter: blur(16px);
@@ -87,7 +86,6 @@
             outline: none;
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -121,15 +119,23 @@
                     </h1>
                     <p class="text-xs text-slate-400 font-medium flex items-center gap-1.5">
                         <span id="statusIndicator" class="w-2 h-2 rounded-full bg-yellow-500 inline-block"></span>
-                        <span id="statusText">Đang kết nối tới máy chủ...</span>
+                        <span id="statusText" data-i18n="connecting">Đang kết nối tới máy chủ...</span>
                     </p>
                 </div>
             </div>
 
-            <!-- Header Actions -->
-            <div class="flex items-center gap-3 w-full sm:w-auto">
-                <button onclick="toggleModal(true)" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-cyan-500 hover:from-brand-500 hover:to-cyan-400 text-white font-semibold text-sm shadow-lg shadow-brand-600/30 transition duration-200 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-cloud-arrow-up"></i> Tải Ảnh Lên
+            <!-- Header Actions & Language Switcher -->
+            <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+                <!-- Language Selector -->
+                <select id="langSelect" onchange="changeLanguage(this.value)" class="glass-input px-3 py-2 rounded-xl text-xs font-semibold cursor-pointer">
+                    <option value="vi" selected>🇻🇳 Tiếng Việt</option>
+                    <option value="en">🇬🇧 English</option>
+                    <option value="ja">🇯🇵 日本語</option>
+                    <option value="zh">🇨🇳 中文</option>
+                </select>
+
+                <button onclick="toggleModal(true)" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 to-cyan-500 hover:from-brand-500 hover:to-cyan-400 text-white font-semibold text-sm shadow-lg shadow-brand-600/30 transition duration-200 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> <span data-i18n="uploadBtn">Tải Ảnh Lên</span>
                 </button>
             </div>
         </div>
@@ -142,11 +148,11 @@
             <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
             <div class="relative z-10 max-w-2xl">
                 <span class="px-3 py-1 rounded-full text-xs font-semibold bg-brand-500/10 text-cyan-400 border border-cyan-500/20 mb-3 inline-block">
-                    <i class="fa-solid fa-bolt mr-1"></i> Cơ sở dữ liệu 
+                    <i class="fa-solid fa-bolt mr-1"></i> <span data-i18n="badgeText">Realtime Database</span>
                 </span>
-                <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Khám phá & Lưu trữ khoảnh khắc Minecraft</h2>
-                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-                    Bộ sưu tập được đồng bộ hóa thời gian thực trên cơ sở dữ liệu. Tùy chỉnh tải ảnh lên đơn giản và bảo mật.
+                <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2" data-i18n="bannerTitle">Khám phá & Lưu giữ khoảnh khắc Minecraft</h2>
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed" data-i18n="bannerDesc">
+                    Bộ sưu tập được đồng bộ hóa thời gian thực trên cơ sở dữ liệu Firebase Realtime Database. Tùy chỉnh tải ảnh lên đơn giản và bảo mật.
                 </p>
             </div>
         </div>
@@ -154,7 +160,7 @@
         <!-- Search & Control Bar -->
         <div class="glass-panel rounded-2xl p-4 mb-8 flex flex-col sm:flex-row gap-4 items-center justify-between">
             <div class="relative w-full sm:w-96">
-                <input type="text" id="searchInput" oninput="filterGallery()" placeholder="Tìm kiếm theo tiêu đề hoặc mô tả..." class="glass-input w-full pl-10 pr-4 py-2.5 rounded-xl text-sm">
+                <input type="text" id="searchInput" oninput="filterGallery()" data-i18n-placeholder="searchPlaceholder" placeholder="Tìm kiếm theo tiêu đề hoặc mô tả..." class="glass-input w-full pl-10 pr-4 py-2.5 rounded-xl text-sm">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
             </div>
             <div class="text-sm font-semibold text-cyan-400 bg-brand-950/60 px-4 py-2 rounded-xl border border-brand-800/40" id="imageCount">
@@ -167,7 +173,7 @@
             <!-- Loading Spinner -->
             <div id="loadingSpinner" class="col-span-full text-center py-16">
                 <i class="fa-solid fa-circle-notch fa-spin text-4xl text-cyan-400 mb-3"></i>
-                <p class="text-slate-400 text-sm">Đang tải danh sách ảnh từ Cơ sở dữ liệu...</p>
+                <p class="text-slate-400 text-sm" data-i18n="loadingText">Đang tải danh sách ảnh từ Cơ sở dữ liệu Realtime...</p>
             </div>
         </div>
 
@@ -176,9 +182,9 @@
             <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-brand-950 flex items-center justify-center border border-brand-800/50">
                 <i class="fa-solid fa-image text-3xl text-slate-500"></i>
             </div>
-            <h3 class="text-lg font-bold text-white mb-1">Chưa có bức ảnh nào</h3>
-            <p class="text-slate-400 text-sm mb-4">Hãy tải bức ảnh Minecraft đầu tiên lên hệ thống đám mây!</p>
-            <button onclick="toggleModal(true)" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-medium text-sm transition">
+            <h3 class="text-lg font-bold text-white mb-1" data-i18n="emptyTitle">Chưa có bức ảnh nào</h3>
+            <p class="text-slate-400 text-sm mb-4" data-i18n="emptyDesc">Hãy tải bức ảnh Minecraft đầu tiên lên hệ thống đám mây!</p>
+            <button onclick="toggleModal(true)" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-medium text-sm transition" data-i18n="uploadNow">
                 Tải ảnh ngay
             </button>
         </div>
@@ -187,32 +193,30 @@
     <!-- Upload Modal -->
     <div id="uploadModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-lg rounded-2xl p-6 relative shadow-2xl border border-brand-500/30">
-            <!-- Modal Header -->
             <div class="flex justify-between items-center border-b border-slate-800 pb-4 mb-4">
                 <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-cloud-arrow-up text-cyan-400"></i> Tải Ảnh Lên Đám Mây
+                    <i class="fa-solid fa-cloud-arrow-up text-cyan-400"></i> <span data-i18n="modalUploadTitle">Tải Ảnh Lên Đám Mây</span>
                 </h3>
                 <button onclick="toggleModal(false)" class="text-slate-400 hover:text-white font-bold text-xl leading-none transition">&times;</button>
             </div>
 
-            <!-- Modal Form -->
             <form id="uploadForm" onsubmit="handleUpload(event)" class="space-y-4">
                 <div>
-                    <label class="block text-slate-300 font-semibold text-xs uppercase tracking-wider mb-1">Tiêu đề ảnh <span class="text-cyan-400">*</span></label>
-                    <input type="text" id="imgTitle" required placeholder="Ví dụ: Lâu đài rồng, Biome đại dương..." class="glass-input w-full rounded-xl px-3.5 py-2.5 text-sm">
+                    <label class="block text-slate-300 font-semibold text-xs uppercase tracking-wider mb-1"><span data-i18n="labelTitle">Tiêu đề ảnh</span> <span class="text-cyan-400">*</span></label>
+                    <input type="text" id="imgTitle" required data-i18n-placeholder="placeholderTitle" placeholder="Ví dụ: Lâu đài rồng..." class="glass-input w-full rounded-xl px-3.5 py-2.5 text-sm">
                 </div>
 
                 <div>
-                    <label class="block text-slate-300 font-semibold text-xs uppercase tracking-wider mb-1">Mô tả / Thẻ</label>
-                    <input type="text" id="imgDesc" placeholder="Mô tả hoặc hashtag #shaders #ocean..." class="glass-input w-full rounded-xl px-3.5 py-2.5 text-sm">
+                    <label class="block text-slate-300 font-semibold text-xs uppercase tracking-wider mb-1" data-i18n="labelDesc">Mô tả / Thẻ</label>
+                    <input type="text" id="imgDesc" data-i18n-placeholder="placeholderDesc" placeholder="Mô tả hoặc hashtag..." class="glass-input w-full rounded-xl px-3.5 py-2.5 text-sm">
                 </div>
 
                 <div>
-                    <label class="block text-slate-300 font-semibold text-xs uppercase tracking-wider mb-2">Nguồn ảnh <span class="text-cyan-400">*</span></label>
+                    <label class="block text-slate-300 font-semibold text-xs uppercase tracking-wider mb-2"><span data-i18n="labelSource">Nguồn ảnh</span> <span class="text-cyan-400">*</span></label>
                     
                     <div class="flex gap-2 mb-3">
-                        <button type="button" id="tabFileBtn" onclick="switchTab('file')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-600 text-white transition">Từ máy tính</button>
-                        <button type="button" id="tabUrlBtn" onclick="switchTab('url')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white transition">Đường dẫn URL</button>
+                        <button type="button" id="tabFileBtn" onclick="switchTab('file')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-600 text-white transition" data-i18n="tabFile">Từ máy tính</button>
+                        <button type="button" id="tabUrlBtn" onclick="switchTab('url')" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white transition" data-i18n="tabUrl">Đường dẫn URL</button>
                     </div>
 
                     <div id="fileInputContainer">
@@ -224,28 +228,25 @@
                     </div>
                 </div>
 
-                <!-- Preview Area -->
                 <div id="previewContainer" class="hidden border border-brand-500/20 bg-slate-950/50 p-2 rounded-xl text-center">
-                    <p class="text-slate-400 text-xs mb-1">Xem trước hình ảnh:</p>
+                    <p class="text-slate-400 text-xs mb-1" data-i18n="previewLabel">Xem trước hình ảnh:</p>
                     <img id="previewImage" src="" alt="Preview" class="max-h-40 mx-auto object-contain rounded-lg">
                 </div>
 
-                <!-- Password Input -->
                 <div class="bg-brand-950/80 p-3.5 rounded-xl border border-brand-500/30">
                     <label class="block text-cyan-300 font-semibold text-xs uppercase tracking-wider mb-1 flex items-center gap-1.5">
-                        <i class="fa-solid fa-lock text-cyan-400"></i> Mật khẩu xác thực <span class="text-red-400">*</span>
+                        <i class="fa-solid fa-lock text-cyan-400"></i> <span data-i18n="labelPassword">Mật khẩu xác thực</span> <span class="text-red-400">*</span>
                     </label>
-                    <input type="password" id="authPassword" required placeholder="Nhập mật khẩu tải ảnh..." class="glass-input w-full rounded-lg px-3 py-2 text-sm">
-                    <p class="text-[11px] text-slate-400 mt-1">Yêu cầu xác minh bằng mật khẩu bảo mật mã hóa Base64.</p>
+                    <input type="password" id="authPassword" required data-i18n-placeholder="placeholderPassword" placeholder="Nhập mật khẩu..." class="glass-input w-full rounded-lg px-3 py-2 text-sm">
+                    <p class="text-[11px] text-slate-400 mt-1" data-i18n="passwordNote">Yêu cầu xác minh bằng mật khẩu bảo mật mã hóa Base64.</p>
                 </div>
 
                 <div id="modalAlert" class="hidden p-3 bg-red-500/20 border border-red-500/40 text-red-300 rounded-xl text-xs font-medium"></div>
 
-                <!-- Form Actions -->
                 <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
-                    <button type="button" onclick="toggleModal(false)" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition">Hủy</button>
+                    <button type="button" onclick="toggleModal(false)" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white hover:bg-slate-800 transition" data-i18n="cancelBtn">Hủy</button>
                     <button type="submit" id="submitBtn" class="px-5 py-2 rounded-xl bg-gradient-to-r from-brand-600 to-cyan-500 hover:from-brand-500 hover:to-cyan-400 text-white font-semibold text-xs shadow-lg shadow-brand-600/30 transition flex items-center gap-2">
-                        <span>Xác Nhận Tải Lên</span>
+                        <span data-i18n="confirmUpload">Xác Nhận Tải Lên</span>
                     </button>
                 </div>
             </form>
@@ -271,10 +272,10 @@
                 </div>
                 <div class="flex gap-2 w-full sm:w-auto justify-end">
                     <button id="downloadBtn" onclick="triggerDownloadCurrent()" class="px-4 py-2 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-semibold text-xs flex items-center gap-2 shadow-lg shadow-brand-600/20 transition">
-                        <i class="fa-solid fa-download"></i> Tải Ảnh Về
+                        <i class="fa-solid fa-download"></i> <span data-i18n="downloadBtn">Tải Ảnh Về</span>
                     </button>
                     <button onclick="promptDeleteImage()" class="px-4 py-2 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-400 border border-red-500/30 font-semibold text-xs flex items-center gap-2 transition">
-                        <i class="fa-solid fa-trash"></i> Xóa Ảnh
+                        <i class="fa-solid fa-trash"></i> <span data-i18n="deleteBtn">Xóa Ảnh</span>
                     </button>
                 </div>
             </div>
@@ -285,33 +286,224 @@
     <div id="deleteConfirmModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="glass-panel w-full max-w-sm rounded-2xl p-6 border border-red-500/30">
             <h3 class="text-base font-bold text-red-400 mb-1 flex items-center gap-2">
-                <i class="fa-solid fa-triangle-exclamation"></i> Xác nhận xóa ảnh
+                <i class="fa-solid fa-triangle-exclamation"></i> <span data-i18n="deleteConfirmTitle">Xác nhận xóa ảnh</span>
             </h3>
-            <p class="text-slate-300 text-xs mb-4">Vui lòng nhập mật khẩu xác thực để thực hiện xóa ảnh khỏi Đám mây:</p>
-            <input type="password" id="deletePassword" class="glass-input w-full rounded-xl px-3.5 py-2 text-sm mb-3" placeholder="Nhập mật khẩu...">
+            <p class="text-slate-300 text-xs mb-4" data-i18n="deleteConfirmDesc">Vui lòng nhập mật khẩu xác thực để thực hiện xóa ảnh khỏi Đám mây:</p>
+            <input type="password" id="deletePassword" class="glass-input w-full rounded-xl px-3.5 py-2 text-sm mb-3" data-i18n-placeholder="placeholderPassword" placeholder="Nhập mật khẩu...">
             <div id="deleteAlert" class="hidden mb-3 p-2.5 bg-red-500/20 border border-red-500/40 text-red-300 rounded-xl text-xs"></div>
             <div class="flex justify-end gap-2">
-                <button onclick="toggleDeleteModal(false)" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition">Hủy</button>
-                <button onclick="confirmDeleteImage()" class="px-4 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-xs transition">Xác nhận xóa</button>
+                <button onclick="toggleDeleteModal(false)" class="px-3.5 py-1.5 rounded-xl text-xs font-semibold text-slate-400 hover:text-white transition" data-i18n="cancelBtn">Hủy</button>
+                <button onclick="confirmDeleteImage()" class="px-4 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-xs transition" data-i18n="confirmDelete">Xác nhận xóa</button>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
     <footer class="w-full glass-panel border-t border-cyan-900/30 py-6 mt-12 text-center text-slate-400 text-xs">
-        <p>Minecraft Photo Cloud Gallery &copy; 2026 — Databases & Minecraft Cloud Photo.</p>
+        <p data-i18n="footerText">Minecraft Photo Cloud Gallery &copy; 2026 — Databases & Minecraft Cloud Photo.</p>
     </footer>
 
-    <!-- Firebase SDK Modules -->
+    <!-- Multi-language and Firebase Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
-        // Provided Firebase Configuration
+        // Dictionary for Multi-language support (Compatible worldwide)
+        const translations = {
+            vi: {
+                pageTitle: "Minecraft Cloud Gallery - Kho lưu trữ ảnh khối vuông",
+                connecting: "Đang kết nối tới máy chủ...",
+                connected: "Đã Kết Nối Server (Realtime Database)",
+                connectError: "Lỗi kết nối với máy chủ",
+                uploadBtn: "Tải Ảnh Lên",
+                badgeText: "Realtime Database",
+                bannerTitle: "Khám phá & Lưu giữ khoảnh khắc Minecraft",
+                bannerDesc: "Bộ sưu tập được đồng bộ hóa thời gian thực trên cơ sở dữ liệu Firebase Realtime Database. Tùy chỉnh tải ảnh lên đơn giản và bảo mật.",
+                searchPlaceholder: "Tìm kiếm theo tiêu đề hoặc mô tả...",
+                totalImages: "Tổng số ảnh: ",
+                loadingText: "Đang tải danh sách ảnh từ Cơ sở dữ liệu Realtime...",
+                emptyTitle: "Chưa có bức ảnh nào",
+                emptyDesc: "Hãy tải bức ảnh Minecraft đầu tiên lên hệ thống đám mây!",
+                uploadNow: "Tải ảnh ngay",
+                modalUploadTitle: "Tải Ảnh Lên Đám Mây",
+                labelTitle: "Tiêu đề ảnh",
+                placeholderTitle: "Ví dụ: Lâu đài rồng, Biome đại dương...",
+                labelDesc: "Mô tả / Thẻ",
+                placeholderDesc: "Mô tả hoặc hashtag #shaders #ocean...",
+                labelSource: "Nguồn ảnh",
+                tabFile: "Từ máy tính",
+                tabUrl: "Đường dẫn URL",
+                previewLabel: "Xem trước hình ảnh:",
+                labelPassword: "Mật khẩu xác thực",
+                placeholderPassword: "Nhập mật khẩu...",
+                passwordNote: "Yêu cầu xác minh bằng mật khẩu bảo mật mã hóa Base64.",
+                cancelBtn: "Hủy",
+                confirmUpload: "Xác Nhận Tải Lên",
+                downloadBtn: "Tải Ảnh Về",
+                deleteBtn: "Xóa Ảnh",
+                deleteConfirmTitle: "Xác nhận xóa ảnh",
+                deleteConfirmDesc: "Vui lòng nhập mật khẩu xác thực để thực hiện xóa ảnh khỏi Đám mây:",
+                confirmDelete: "Xác nhận xóa",
+                footerText: "Minecraft Photo Cloud Gallery &copy; 2026 — Cơ sở dữ liệu đám mây.",
+                toastUpload: "Đã tải ảnh lên Realtime Database!",
+                toastDelete: "Đã xóa ảnh khỏi Đám mây!",
+                errorPassword: "Mật khẩu xác thực không đúng!"
+            },
+            en: {
+                pageTitle: "Minecraft Cloud Gallery - World of Blocks",
+                connecting: "Connecting to server...",
+                connected: "Server Connected (Realtime Database)",
+                connectError: "Server connection error",
+                uploadBtn: "Upload Photo",
+                badgeText: "Realtime Database",
+                bannerTitle: "Discover & Store Minecraft Moments",
+                bannerDesc: "The collection is synchronized in real time on the Firebase Realtime Database. Simple and secure photo uploads.",
+                searchPlaceholder: "Search by title or description...",
+                totalImages: "Total photos: ",
+                loadingText: "Loading photos from Realtime Database...",
+                emptyTitle: "No photos yet",
+                emptyDesc: "Upload the first Minecraft photo to the cloud system!",
+                uploadNow: "Upload now",
+                modalUploadTitle: "Upload Photo to Cloud",
+                labelTitle: "Photo Title",
+                placeholderTitle: "Example: Dragon Castle, Ocean Biome...",
+                labelDesc: "Description / Tags",
+                placeholderDesc: "Description or hashtag #shaders #ocean...",
+                labelSource: "Photo Source",
+                tabFile: "From Computer",
+                tabUrl: "Image URL",
+                previewLabel: "Image Preview:",
+                labelPassword: "Authentication Password",
+                placeholderPassword: "Enter password...",
+                passwordNote: "Verification required using Base64 encoded secure password.",
+                cancelBtn: "Cancel",
+                confirmUpload: "Confirm Upload",
+                downloadBtn: "Download",
+                deleteBtn: "Delete",
+                deleteConfirmTitle: "Confirm Deletion",
+                deleteConfirmDesc: "Please enter authentication password to delete photo from Cloud:",
+                confirmDelete: "Confirm Delete",
+                footerText: "Minecraft Photo Cloud Gallery &copy; 2026 — Cloud Database.",
+                toastUpload: "Photo uploaded to Realtime Database successfully!",
+                toastDelete: "Photo deleted from Cloud successfully!",
+                errorPassword: "Incorrect authentication password!"
+            },
+            ja: {
+                pageTitle: "マインクラフト クラウドギャラリー",
+                connecting: "サーバーに接続中...",
+                connected: "サーバー接続完了",
+                connectError: "接続エラー",
+                uploadBtn: "画像をアップロード",
+                badgeText: "リアルタイムデータベース",
+                bannerTitle: "マインクラフトの瞬間を保存・共有",
+                bannerDesc: "Firebase Realtime Databaseで同期されたギャラリーです。",
+                searchPlaceholder: "タイトルや説明で検索...",
+                totalImages: "総画像数: ",
+                loadingText: "読み込み中...",
+                emptyTitle: "画像がありません",
+                emptyDesc: "最初のマインクラフトの写真をアップロードしよう！",
+                uploadNow: "今すぐアップロード",
+                modalUploadTitle: "クラウドへアップロード",
+                labelTitle: "画像タイトル",
+                placeholderTitle: "例：ドラゴンの城...",
+                labelDesc: "説明 / タグ",
+                placeholderDesc: "ハッシュタグなど...",
+                labelSource: "画像ソース",
+                tabFile: "パソコンから",
+                tabUrl: "URLリンク",
+                previewLabel: "プレビュー:",
+                labelPassword: "パスワード確認",
+                placeholderPassword: "パスワードを入力...",
+                passwordNote: "Base64暗号化パスワードが必要です。",
+                cancelBtn: "キャンセル",
+                confirmUpload: "アップロード確認",
+                downloadBtn: "ダウンロード",
+                deleteBtn: "削除",
+                deleteConfirmTitle: "削除の確認",
+                deleteConfirmDesc: "クラウドから写真を削除するにはパスワードを入力してください：",
+                confirmDelete: "削除する",
+                footerText: "Minecraft Photo Cloud Gallery &copy; 2026",
+                toastUpload: "アップロードしました！",
+                toastDelete: "削除しました！",
+                errorPassword: "パスワードが間違っています！"
+            },
+            zh: {
+                pageTitle: "我的世界云端相册",
+                connecting: "正在连接服务器...",
+                connectingText: "服务器已连接",
+                connectError: "连接服务器失败",
+                uploadBtn: "上传图片",
+                badgeText: "实时数据库",
+                bannerTitle: "探索与保存我的世界精彩瞬间",
+                bannerDesc: "相册已在 Firebase 实时数据库上同步。简单且安全的照片上传。",
+                searchPlaceholder: "通过标题或描述搜索...",
+                totalImages: "图片总数：",
+                loadingText: "正在从实时数据库加载图片...",
+                emptyTitle: "暂无图片",
+                emptyDesc: "快来上传第一张我的世界照片吧！",
+                uploadNow: "立即上传",
+                modalUploadTitle: "上传照片到云端",
+                labelTitle: "图片标题",
+                placeholderTitle: "例如：巨龙城堡...",
+                labelDesc: "描述 / 标签",
+                placeholderDesc: "描述或标签...",
+                labelSource: "图片来源",
+                tabFile: "从电脑本地",
+                tabUrl: "网络图片链接",
+                previewLabel: "图片预览：",
+                labelPassword: "验证密码",
+                placeholderPassword: "输入密码...",
+                passwordNote: "需要通过 Base64 加密密码进行验证。",
+                cancelBtn: "取消",
+                confirmUpload: "确认上传",
+                downloadBtn: "下载图片",
+                deleteBtn: "删除图片",
+                deleteConfirmTitle: "确认删除照片",
+                deleteConfirmDesc: "请输入身份验证密码以从云端删除照片：",
+                confirmDelete: "确认删除",
+                footerText: "Minecraft Photo Cloud Gallery &copy; 2026 — 云数据库相册。",
+                toastUpload: "照片已成功上传至实时数据库！",
+                toastDelete: "照片已从云端删除！",
+                errorPassword: "验证密码不正确！"
+            }
+        };
+
+        let currentLang = 'vi';
+
+        window.changeLanguage = function(lang) {
+            currentLang = lang;
+            document.getElementById('htmlRoot').setAttribute('lang', lang);
+            
+            // Dịch tất cả các thẻ có attribute data-i18n
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+
+            // Dịch tất cả các placeholder có attribute data-i18n-placeholder
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (translations[lang] && translations[lang][key]) {
+                    el.placeholder = translations[lang][key];
+                }
+            });
+
+            // Cập nhật lại số lượng ảnh theo ngôn ngữ đang chọn
+            const countLabel = document.getElementById('imageCount');
+            if (countLabel) {
+                const count = allGalleryItems.length;
+                countLabel.textContent = `${translations[currentLang].totalImages}${count}`;
+            }
+        };
+
+        // Firebase Configuration Matching Your Console
         const firebaseConfig = {
             apiKey: "AIzaSyDR_A1mO2lAdSUDPMTOzFuastIP-0FLFYs",
             authDomain: "photo-1e766.firebaseapp.com",
+            databaseURL: "https://photo-1e766-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "photo-1e766",
             storageBucket: "photo-1e766.firebasestorage.app",
             messagingSenderId: "952652282936",
@@ -319,14 +511,12 @@
             measurementId: "G-PT0SL6MBGE"
         };
 
-        // Target Base64 password: 'fjjfjfjdjfjffjkei' -> 'c3VuZ3R1YW5hbmg='
+        // Target Base64 password: 'sungtuananh' -> 'c3VuZ3R1YW5hbmg='
         const TARGET_BASE64_PASSWORD = 'c3VuZ3R1YW5hbmg=';
-        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'minecraft-gallery-app';
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
+        const db = getDatabase(app);
 
         let currentUserId = null;
         let allGalleryItems = [];
@@ -334,19 +524,17 @@
         let currentBase64File = '';
         let currentSelectedImgId = null;
 
-        // Collection Path following Mandatory Rules
-        const galleryCollectionRef = collection(db, 'artifacts', APP_ID, 'public', 'data', 'mc_photos');
+        const photosRef = ref(db, 'mc_photos');
 
-        // Authenticate anonymously first
         signInAnonymously(auth).catch(err => {
             console.error("Auth error:", err);
-            updateStatus(false, "Lỗi kết nối với máy chủ");
+            updateStatus(false, translations[currentLang].connectError);
         });
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUserId = user.uid;
-                updateStatus(true, "máy chủ Đã Kết Nối (Trực Tuyến)");
+                updateStatus(true, translations[currentLang].connected);
                 listenToGalleryUpdates();
             }
         });
@@ -362,25 +550,28 @@
             txt.textContent = text;
         }
 
-        // Realtime Firestore Listener
         function listenToGalleryUpdates() {
-            onSnapshot(galleryCollectionRef, (snapshot) => {
+            onValue(photosRef, (snapshot) => {
+                const data = snapshot.val();
                 const items = [];
-                snapshot.forEach(doc => {
-                    items.push({ id: doc.id, ...doc.data() });
-                });
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        items.push({
+                            id: key,
+                            ...data[key]
+                        });
+                    });
+                }
                 
-                // Sort in memory by createdAt descending
-                items.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-                
+                items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
                 allGalleryItems = items;
                 renderGallery(allGalleryItems);
                 
                 const spinner = document.getElementById('loadingSpinner');
-                if (spinner) spinner.remove();
+                if (spinner) spinner.style.display = 'none';
             }, (error) => {
-                console.error("Firestore Listener Error:", error);
-                updateStatus(false, "Lỗi tải dữ liệu Realtime");
+                console.error("Database Error:", error);
+                updateStatus(false, translations[currentLang].connectError);
             });
         }
 
@@ -389,7 +580,7 @@
             const emptyState = document.getElementById('emptyState');
             const countLabel = document.getElementById('imageCount');
 
-            countLabel.textContent = `Tổng số ảnh: ${items.length}`;
+            countLabel.textContent = `${translations[currentLang].totalImages}${items.length}`;
             grid.innerHTML = '';
 
             if (items.length === 0) {
@@ -403,7 +594,7 @@
                 const card = document.createElement('div');
                 card.className = 'glass-card rounded-2xl overflow-hidden flex flex-col justify-between group';
                 
-                const formattedDate = item.createdAt ? new Date(item.createdAt.seconds * 1000).toLocaleDateString('vi-VN') : 'Mới';
+                const formattedDate = item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'New';
 
                 card.innerHTML = `
                     <div class="relative aspect-[16/10] bg-slate-950 overflow-hidden cursor-pointer" onclick="openViewModal('${item.id}')">
@@ -411,19 +602,19 @@
                              onerror="this.src='https://placehold.co/600x400/040d1a/38bdf8?text=Minecraft+Photo'" 
                              class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-3">
-                            <span class="text-xs text-cyan-300 font-medium"><i class="fa-solid fa-expand mr-1"></i> Xem phóng to</span>
+                            <span class="text-xs text-cyan-300 font-medium"><i class="fa-solid fa-expand mr-1"></i> Zoom</span>
                         </div>
                     </div>
                     <div class="p-4 flex-grow flex flex-col justify-between">
                         <div>
                             <h3 class="font-bold text-white text-base truncate mb-1" title="${item.title}">${item.title}</h3>
-                            <p class="text-slate-400 text-xs line-clamp-2 leading-relaxed">${item.desc || 'Không có mô tả'}</p>
+                            <p class="text-slate-400 text-xs line-clamp-2 leading-relaxed">${item.desc || '-'}</p>
                         </div>
                         <div class="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between">
                             <span class="text-[11px] text-slate-500 font-medium"><i class="fa-regular fa-calendar mr-1"></i>${formattedDate}</span>
                             <button onclick="downloadImageDirect(event, '${item.url}', '${item.title}')" 
                                     class="px-3 py-1.5 rounded-lg bg-brand-600/30 hover:bg-brand-600 text-cyan-300 hover:text-white border border-brand-500/30 text-xs font-semibold transition flex items-center gap-1.5">
-                                <i class="fa-solid fa-download"></i> Tải về
+                                <i class="fa-solid fa-download"></i> ${currentLang === 'vi' ? 'Tải về' : 'Download'}
                             </button>
                         </div>
                     </div>
@@ -441,13 +632,9 @@
             renderGallery(filtered);
         };
 
-        // Upload Handling
         window.handleUpload = async function(event) {
             event.preventDefault();
-            if (!currentUserId) {
-                showModalAlert('Đang kết nối hệ thống... Vui lòng đợi trong giây lát.');
-                return;
-            }
+            if (!currentUserId) return;
 
             const alertBox = document.getElementById('modalAlert');
             alertBox.classList.add('hidden');
@@ -456,72 +643,53 @@
             const desc = document.getElementById('imgDesc').value.trim();
             const password = document.getElementById('authPassword').value;
 
-            // Base64 Password Verification
             let encodedPassword = '';
             try {
                 encodedPassword = btoa(password);
             } catch (e) {
-                showModalAlert('Lỗi định dạng mật khẩu.');
                 return;
             }
 
             if (encodedPassword !== TARGET_BASE64_PASSWORD) {
-                showModalAlert('Mật khẩu xác thực không đúng!');
+                alertBox.textContent = translations[currentLang].errorPassword;
+                alertBox.classList.remove('hidden');
                 return;
             }
 
-            let finalImageUrl = '';
-            if (activeTab === 'file') {
-                if (!currentBase64File) {
-                    showModalAlert('Vui lòng chọn một file ảnh hợp lệ!');
-                    return;
-                }
-                finalImageUrl = currentBase64File;
-            } else {
-                const urlVal = document.getElementById('imgUrl').value.trim();
-                if (!urlVal) {
-                    showModalAlert('Vui lòng nhập đường dẫn URL ảnh!');
-                    return;
-                }
-                finalImageUrl = urlVal;
-            }
+            let finalImageUrl = activeTab === 'file' ? currentBase64File : document.getElementById('imgUrl').value.trim();
+            if (!finalImageUrl) return;
 
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải lên...`;
 
             try {
-                await addDoc(galleryCollectionRef, {
+                await push(photosRef, {
                     title: title,
                     desc: desc,
                     url: finalImageUrl,
                     userId: currentUserId,
-                    createdAt: serverTimestamp()
+                    createdAt: Date.now()
                 });
 
                 toggleModal(false);
-                showToast('Đã tải ảnh lên cơ sở dữ liệu!');
+                showToast(translations[currentLang].toastUpload);
             } catch (err) {
-                console.error("databases Add Error:", err);
-                showModalAlert('Không thể tải ảnh lên Server: ' + err.message);
+                alertBox.textContent = err.message;
+                alertBox.classList.remove('hidden');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = `<span>Xác Nhận Tải Lên</span>`;
             }
         };
 
-        // Delete Image Handling
         window.confirmDeleteImage = async function() {
             const pwd = document.getElementById('deletePassword').value;
             const alertBox = document.getElementById('deleteAlert');
             
             let encoded = '';
-            try {
-                encoded = btoa(pwd);
-            } catch(e) {}
+            try { encoded = btoa(pwd); } catch(e) {}
 
             if (encoded !== TARGET_BASE64_PASSWORD) {
-                alertBox.textContent = 'Mật khẩu không chính xác!';
+                alertBox.textContent = translations[currentLang].errorPassword;
                 alertBox.classList.remove('hidden');
                 return;
             }
@@ -529,29 +697,23 @@
             if (!currentSelectedImgId) return;
 
             try {
-                const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'mc_photos', currentSelectedImgId);
-                await deleteDoc(docRef);
-
+                await remove(ref(db, `mc_photos/${currentSelectedImgId}`));
                 toggleDeleteModal(false);
                 toggleViewModal(false);
-                showToast('Đã xóa ảnh khỏi Đám mây!');
+                showToast(translations[currentLang].toastDelete);
             } catch (err) {
-                alertBox.textContent = 'Lỗi khi xóa ảnh: ' + err.message;
+                alertBox.textContent = err.message;
                 alertBox.classList.remove('hidden');
             }
         };
 
-        // Global Helper Functions
         window.toggleModal = function(show) {
             const modal = document.getElementById('uploadModal');
-            const alertBox = document.getElementById('modalAlert');
             if (show) {
                 modal.classList.remove('hidden');
                 document.getElementById('uploadForm').reset();
                 document.getElementById('previewContainer').classList.add('hidden');
-                alertBox.classList.add('hidden');
                 currentBase64File = '';
-                switchTab('file');
             } else {
                 modal.classList.add('hidden');
             }
@@ -561,36 +723,24 @@
             activeTab = tab;
             const fileContainer = document.getElementById('fileInputContainer');
             const urlContainer = document.getElementById('urlInputContainer');
-            const tabFileBtn = document.getElementById('tabFileBtn');
-            const tabUrlBtn = document.getElementById('tabUrlBtn');
-            document.getElementById('previewContainer').classList.add('hidden');
-            currentBase64File = '';
-
             if (tab === 'file') {
                 fileContainer.classList.remove('hidden');
                 urlContainer.classList.add('hidden');
-                tabFileBtn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-600 text-white transition';
-                tabUrlBtn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white transition';
             } else {
                 fileContainer.classList.add('hidden');
                 urlContainer.classList.remove('hidden');
-                tabUrlBtn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-brand-600 text-white transition';
-                tabFileBtn.className = 'px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white transition';
             }
         };
 
         window.previewImageFile = function(event) {
             const file = event.target.files[0];
             if (file) {
-                if (file.size > 2 * 1024 * 1024) {
-                    showModalAlert('Vui lòng chọn file dưới 2MB để đảm bảo tốc độ.');
-                    event.target.value = '';
-                    return;
-                }
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     currentBase64File = e.target.result;
-                    showPreview(currentBase64File);
+                    const img = document.getElementById('previewImage');
+                    img.src = currentBase64File;
+                    document.getElementById('previewContainer').classList.remove('hidden');
                 };
                 reader.readAsDataURL(file);
             }
@@ -598,92 +748,59 @@
 
         window.previewImageUrl = function(url) {
             if (url.trim().length > 5) {
-                showPreview(url.trim());
-            } else {
-                document.getElementById('previewContainer').classList.add('hidden');
+                const img = document.getElementById('previewImage');
+                img.src = url.trim();
+                document.getElementById('previewContainer').classList.remove('hidden');
             }
         };
-
-        function showPreview(src) {
-            const container = document.getElementById('previewContainer');
-            const img = document.getElementById('previewImage');
-            img.src = src;
-            container.classList.remove('hidden');
-        }
-
-        function showModalAlert(msg) {
-            const alertBox = document.getElementById('modalAlert');
-            alertBox.textContent = msg;
-            alertBox.classList.remove('hidden');
-        }
 
         window.openViewModal = function(id) {
             const item = allGalleryItems.find(i => i.id === id);
             if (!item) return;
-
             currentSelectedImgId = id;
             document.getElementById('viewModalImg').src = item.url;
             document.getElementById('viewModalTitle').textContent = item.title;
-            document.getElementById('viewModalDesc').textContent = item.desc || 'Không có mô tả';
-            const formattedDate = item.createdAt ? new Date(item.createdAt.seconds * 1000).toLocaleDateString('vi-VN') : 'Mới';
-            document.getElementById('viewModalDate').textContent = `Ngày cập nhật: ${formattedDate}`;
-
+            document.getElementById('viewModalDesc').textContent = item.desc || '';
             document.getElementById('viewModal').classList.remove('hidden');
         };
 
         window.toggleViewModal = function(show) {
-            const modal = document.getElementById('viewModal');
-            if (show) modal.classList.remove('hidden');
-            else modal.classList.add('hidden');
+            document.getElementById('viewModal').classList.toggle('hidden', !show);
         };
 
         window.promptDeleteImage = function() {
             document.getElementById('deletePassword').value = '';
             document.getElementById('deleteAlert').classList.add('hidden');
-            toggleDeleteModal(true);
+            document.getElementById('deleteConfirmModal').classList.remove('hidden');
         };
 
         window.toggleDeleteModal = function(show) {
-            const modal = document.getElementById('deleteConfirmModal');
-            if (show) modal.classList.remove('hidden');
-            else modal.classList.add('hidden');
+            document.getElementById('deleteConfirmModal').classList.toggle('hidden', !show);
         };
 
         window.downloadImageDirect = function(event, url, title) {
             if (event) event.stopPropagation();
-            const filename = (title || 'minecraft-photo').toLowerCase().replace(/\s+/g, '-') + '.jpg';
-            
+            const filename = (title || 'minecraft').toLowerCase().replace(/\s+/g, '-') + '.jpg';
             if (url.startsWith('data:')) {
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = filename;
-                document.body.appendChild(a);
                 a.click();
-                document.body.removeChild(a);
             } else {
-                fetch(url)
-                    .then(res => res.blob())
-                    .then(blob => {
-                        const blobUrl = window.URL.createObjectURL(blob);
-                        const a = document.createElement('a');
-                        a.href = blobUrl;
-                        a.download = filename;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        window.URL.revokeObjectURL(blobUrl);
-                    })
-                    .catch(() => {
-                        window.open(url, '_blank');
-                    });
+                fetch(url).then(res => res.blob()).then(blob => {
+                    const blobUrl = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = blobUrl;
+                    a.download = filename;
+                    a.click();
+                    window.URL.revokeObjectURL(blobUrl);
+                }).catch(() => window.open(url, '_blank'));
             }
         };
 
         window.triggerDownloadCurrent = function() {
             const item = allGalleryItems.find(i => i.id === currentSelectedImgId);
-            if (item) {
-                downloadImageDirect(null, item.url, item.title);
-            }
+            if (item) downloadImageDirect(null, item.url, item.title);
         };
 
         function showToast(message) {
@@ -691,10 +808,7 @@
             toast.className = 'fixed bottom-6 right-6 px-4 py-3 rounded-xl bg-brand-600 text-white font-semibold text-xs z-50 shadow-2xl border border-cyan-400/40 flex items-center gap-2';
             toast.innerHTML = `<i class="fa-solid fa-circle-check text-cyan-300"></i> ${message}`;
             document.body.appendChild(toast);
-
-            setTimeout(() => {
-                toast.remove();
-            }, 3000);
+            setTimeout(() => toast.remove(), 3000);
         }
     </script>
 </body>
