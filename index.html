@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -121,7 +121,7 @@
                     </h1>
                     <p class="text-xs text-slate-400 font-medium flex items-center gap-1.5">
                         <span id="statusIndicator" class="w-2 h-2 rounded-full bg-yellow-500 inline-block"></span>
-                        <span id="statusText">Đang kết nối Firebase...</span>
+                        <span id="statusText">Đang kết nối tới máy chủ...</span>
                     </p>
                 </div>
             </div>
@@ -142,11 +142,11 @@
             <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
             <div class="relative z-10 max-w-2xl">
                 <span class="px-3 py-1 rounded-full text-xs font-semibold bg-brand-500/10 text-cyan-400 border border-cyan-500/20 mb-3 inline-block">
-                    <i class="fa-solid fa-bolt mr-1"></i> Firebase Realtime Storage
+                    <i class="fa-solid fa-bolt mr-1"></i> Cơ sở dữ liệu 
                 </span>
                 <h2 class="text-2xl sm:text-3xl font-bold text-white mb-2">Khám phá & Lưu trữ khoảnh khắc Minecraft</h2>
                 <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
-                    Bộ sưu tập được đồng bộ hóa thời gian thực trên Đám mây Firebase. Tùy chỉnh tải ảnh lên đơn giản và bảo mật.
+                    Bộ sưu tập được đồng bộ hóa thời gian thực trên cơ sở dữ liệu. Tùy chỉnh tải ảnh lên đơn giản và bảo mật.
                 </p>
             </div>
         </div>
@@ -167,7 +167,7 @@
             <!-- Loading Spinner -->
             <div id="loadingSpinner" class="col-span-full text-center py-16">
                 <i class="fa-solid fa-circle-notch fa-spin text-4xl text-cyan-400 mb-3"></i>
-                <p class="text-slate-400 text-sm">Đang tải danh sách ảnh từ Firebase...</p>
+                <p class="text-slate-400 text-sm">Đang tải danh sách ảnh từ Cơ sở dữ liệu...</p>
             </div>
         </div>
 
@@ -299,7 +299,7 @@
 
     <!-- Footer -->
     <footer class="w-full glass-panel border-t border-cyan-900/30 py-6 mt-12 text-center text-slate-400 text-xs">
-        <p>Minecraft Photo Cloud Gallery &copy; 2026 — Firebase Storage & Firestore Connected.</p>
+        <p>Minecraft Photo Cloud Gallery &copy; 2026 — Databases & Minecraft Cloud Photo.</p>
     </footer>
 
     <!-- Firebase SDK Modules -->
@@ -319,7 +319,7 @@
             measurementId: "G-PT0SL6MBGE"
         };
 
-        // Target Base64 password: 'sungtuananh' -> 'c3VuZ3R1YW5hbmg='
+        // Target Base64 password: 'fjjfjfjdjfjffjkei' -> 'c3VuZ3R1YW5hbmg='
         const TARGET_BASE64_PASSWORD = 'c3VuZ3R1YW5hbmg=';
         const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'minecraft-gallery-app';
 
@@ -340,13 +340,13 @@
         // Authenticate anonymously first
         signInAnonymously(auth).catch(err => {
             console.error("Auth error:", err);
-            updateStatus(false, "Lỗi kết nối Auth Firebase");
+            updateStatus(false, "Lỗi kết nối với máy chủ");
         });
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 currentUserId = user.uid;
-                updateStatus(true, "Firebase Đã Kết Nối (Realtime)");
+                updateStatus(true, "máy chủ Đã Kết Nối (Trực Tuyến)");
                 listenToGalleryUpdates();
             }
         });
@@ -500,10 +500,10 @@
                 });
 
                 toggleModal(false);
-                showToast('Đã tải ảnh lên Đám mây Firebase!');
+                showToast('Đã tải ảnh lên cơ sở dữ liệu!');
             } catch (err) {
-                console.error("Firestore Add Error:", err);
-                showModalAlert('Không thể tải ảnh lên Firebase: ' + err.message);
+                console.error("databases Add Error:", err);
+                showModalAlert('Không thể tải ảnh lên Server: ' + err.message);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = `<span>Xác Nhận Tải Lên</span>`;
